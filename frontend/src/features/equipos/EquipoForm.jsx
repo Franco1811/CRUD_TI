@@ -1,43 +1,54 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 
+// Este formulario sirve tanto para Registrar como para Editar.
+// Si le pasamos la prop 'equipoEditar', se comporta como modo Edición, si no, como Registro.
 const EquipoForm = ({ equipoEditar, onGuardadoExitoso, onCancelar }) => {
+    // Estado para controlar los campos del formulario
     const [equipo, setEquipo] = useState({
         tipoEquipo: '',
         marca: '',
         numeroSerie: '',
         estado: 'Activo'
     });
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null); // Guarda mensajes de error del backend (ej. duplicados)
 
+    // Este useEffect se activa cuando cambia la prop 'equipoEditar' (ej: al presionar Editar en la lista)
     useEffect(() => {
         if (equipoEditar) {
-            setEquipo(equipoEditar);
+            setEquipo(equipoEditar); // Rellenamos el form con los datos del equipo a editar
         } else {
+            // Si no hay equipo editándose, limpiamos los campos
             setEquipo({ tipoEquipo: '', marca: '', numeroSerie: '', estado: 'Activo' });
         }
     }, [equipoEditar]);
 
+    // Función genérica para manejar los cambios de cualquier input del formulario
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEquipo(prev => ({ ...prev, [name]: value }));
     };
 
+    // Enviar los datos al backend
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Evitamos que la página se recargue al enviar el formulario
         setError(null);
         try {
             if (equipo.id) {
+                // Si ya tiene un ID, significa que estamos editando
                 await api.put(`/equipos/${equipo.id}`, equipo);
             } else {
+                // Si no tiene ID, es un equipo nuevo
                 await api.post('/equipos', equipo);
             }
-            onGuardadoExitoso();
-            setEquipo({ tipoEquipo: '', marca: '', numeroSerie: '', estado: 'Activo' });
+            onGuardadoExitoso(); // Callback para notificar a App.jsx que recargue la lista
+            setEquipo({ tipoEquipo: '', marca: '', numeroSerie: '', estado: 'Activo' }); // Limpiamos campos
         } catch (err) {
+            // Si el backend arrojó un error (ej: número de serie duplicado), lo mostramos en pantalla
             setError(err.response?.data || 'Error al guardar el equipo');
         }
     };
+
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -45,7 +56,7 @@ const EquipoForm = ({ equipoEditar, onGuardadoExitoso, onCancelar }) => {
                 {equipo.id ? 'Editar Equipo' : 'Registrar Nuevo Equipo'}
             </h2>
             {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -96,7 +107,7 @@ const EquipoForm = ({ equipoEditar, onGuardadoExitoso, onCancelar }) => {
                         </select>
                     </div>
                 </div>
-                
+
                 <div className="flex justify-end space-x-3 pt-4">
                     {equipo.id && (
                         <button

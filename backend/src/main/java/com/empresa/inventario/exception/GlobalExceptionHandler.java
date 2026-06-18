@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+// Con @RestControllerAdvice creamos un interceptor global de errores.
+// Si algún controlador o servicio lanza una excepción, esta clase la captura automáticamente y
+// responde con un JSON ordenado en lugar de romper la app o mostrar una pantalla fea de error.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -25,7 +28,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
     }
 
-    // Maneja nuestras excepciones de lógica de negocio (ej. Número de serie duplicado)
+    // Maneja nuestras excepciones de lógica de negocio (ej. Número de serie
+    // duplicado)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> manejarExcepcionesDeNegocio(IllegalArgumentException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -34,6 +38,7 @@ public class GlobalExceptionHandler {
     // Maneja cualquier otro error inesperado (Error 500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> manejarErroresGenerales(Exception ex) {
-        return new ResponseEntity<>("Ocurrió un error interno en el servidor: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Ocurrió un error interno en el servidor: " + ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
