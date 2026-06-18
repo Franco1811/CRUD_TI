@@ -1,0 +1,43 @@
+@baseUrl = http://localhost:8080/api
+
+### 1. Listar todos los equipos (GET)
+GET {{baseUrl}}/equipos
+
+### 2. Registrar un nuevo equipo (POST)
+POST {{baseUrl}}/equipos
+Content-Type: application/json
+
+{
+  "tipoEquipo": "Laptop",
+  "marca": "HP",
+  "numeroSerie": "HP-847291",
+  "estado": "Activo"
+}
+
+### 3. Intentar registrar duplicado (POST - Debe retornar error 400)
+POST {{baseUrl}}/equipos
+Content-Type: application/json
+
+{
+  "tipoEquipo": "Laptop",
+  "marca": "HP",
+  "numeroSerie": "HP-847291",
+  "estado": "Activo"
+}
+
+### 4. Obtener un equipo específico por su ID (GET)
+GET {{baseUrl}}/equipos/1
+
+### 5. Actualizar un equipo por su ID (PUT)
+PUT {{baseUrl}}/equipos/1
+Content-Type: application/json
+
+{
+  "tipoEquipo": "Laptop Gamer",
+  "marca": "HP",
+  "numeroSerie": "HP-847291",
+  "estado": "En Mantenimiento"
+}
+
+### 6. Eliminar un equipo por su ID (DELETE)
+DELETE {{baseUrl}}/equipos/1

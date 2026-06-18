@@ -1,0 +1,15 @@
+{
+  "name": "crud_ti",
+  "version": "1.0.0",
+  "description": "CRUD de Equipos TI",
+  "scripts": {
+    "dev": "concurrently \"pnpm run dev:db\" \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev:db": "docker compose up",
+    "dev:backend": "cd backend && ./mvnw spring-boot:run",
+    "dev:frontend": "cd frontend && pnpm dev",
+    "install:all": "cd frontend && pnpm install"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
